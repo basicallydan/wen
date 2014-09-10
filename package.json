@@ -1,0 +1,40 @@
+{
+  "name": "wen",
+  "version": "1.0.0",
+  "description": "Triggers events based on the truthiness of predicate methods",
+  "main": "lib/wen.js",
+  "scripts": {
+    "test": "mocha spec/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/basicallydan/wen"
+  },
+  "keywords": [
+    "truthy",
+    "truth",
+    "event",
+    "on",
+    "true",
+    "when",
+    "wen",
+    "wenjs",
+    "whenjs",
+    "eventemitter",
+    "truthmonitor"
+  ],
+  "author": "Dan Hough <daniel.hough@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/basicallydan/wen/issues"
+  },
+  "homepage": "https://github.com/basicallydan/wen",
+  "devDependencies": {
+    "mocha": "^1.21.4",
+    "should": "^4.0.4"
+  },
+  "dependencies": {
+    "js-extend": "0.0.2",
+    "wolfy87-eventemitter": "^4.2.6"
+  }
+}
