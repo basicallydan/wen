@@ -34,7 +34,7 @@ npm install wen --save
 Copy this into your HTML somewhere.
 
 ```
-<script src="https://github.com/basicallydan/wen/tree/master/dist/wen.1.0.0.min.js"></script>
+<script src="https://raw.githubusercontent.com/basicallydan/wen/master/dist/wen.1.0.0.min.js"></script>
 <!-- If I want to do this properly I will download it and place it in my source code somewhere -->
 ```
 
