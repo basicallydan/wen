@@ -75,5 +75,11 @@ describe('wen', function () {
 				return true;
 			}, 'is-now-higher', 10);
 		});
+
+		it('should throw an error if you do not supply an event', function () {
+			should(function () {
+				truthy.add(function () {});
+			}).throw();
+		});
 	});
 });

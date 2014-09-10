@@ -1,6 +1,6 @@
 {
   "name": "wen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Triggers events based on the truthiness of predicate methods",
   "main": "lib/wen.js",
   "scripts": {

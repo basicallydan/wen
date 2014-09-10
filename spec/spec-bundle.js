@@ -1,37 +1,58 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var extend = require('js-extend').extend;
-var EventEmitter = require('wolfy87-eventemitter');
+(function (global){
+(function() {
+	var extend = require('js-extend').extend;
+	var EventEmitter = require('wolfy87-eventemitter');
+	var root = global || window;
 
-function TruthinessMonitor () {
-	this.intervals = {};
-}
-
-TruthinessMonitor.prototype.add = function (predicate, event, delay) {
-	if (this.intervals[event]) {
-		throw new Error('You have already registered to watch for a truth with that event');
+	function TruthinessMonitor() {
+		this.intervals = {};
 	}
 
-	if (predicate()) {
-		this.trigger(event);
-		return;
-	}
+	TruthinessMonitor.prototype.add = function(predicate, event, delay) {
+		if (!event) {
+			throw new Error('You must supply an event with your predicate');
+		}
 
-	this.intervals[event] = setInterval(function () {
+		if (this.intervals[event]) {
+			throw new Error('You have already registered to watch for a truth with that event');
+		}
+
 		if (predicate()) {
 			this.trigger(event);
-			clearTimeout(this.intervals[event]);
-			delete this.intervals[event];
+			return;
 		}
-	}.bind(this), delay);
-};
 
-extend(TruthinessMonitor.prototype, EventEmitter.prototype);
+		this.intervals[event] = setInterval(function() {
+			if (predicate()) {
+				this.trigger(event);
+				clearTimeout(this.intervals[event]);
+				delete this.intervals[event];
+			}
+		}.bind(this), delay);
+	};
 
-function create() {
-	return new TruthinessMonitor();
-}
+	extend(TruthinessMonitor.prototype, EventEmitter.prototype);
 
-module.exports = create;
+	function create() {
+		return new TruthinessMonitor();
+	}
+
+	module.exports = create;
+
+	// Export the create function for **Node.js** or other
+	// commonjs systems. Otherwise, add it as a global object to the root
+	if (typeof exports !== 'undefined') {
+		if (typeof module !== 'undefined' && module.exports) {
+			exports = module.exports = create;
+		}
+		exports.create = create;
+	}
+	if (typeof window !== 'undefined') {
+		window.wen = create;
+	}
+}).call(this);
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"js-extend":2,"wolfy87-eventemitter":18}],2:[function(require,module,exports){
 (function() { 
 
@@ -2236,17 +2257,21 @@ var should = require('should');
 var wen = require('..');
 
 describe('wen', function () {
-	var truthy;
+	var truthy, start, end;
 
 	beforeEach(function () {
 		truthy = wen();
+		start = new Date();
 	});
 
 	describe('#add', function () {
 		it('should return true within a few hundred milliseconds', function (done) {
+			this.timeout(3000);
 			var willBeTrue = false;
 
 			truthy.on('is-now-true', function () {
+				end = new Date();
+				(end - start).should.not.be.below(500).and.not.above(1600);
 				willBeTrue.should.eql(true);
 				done();
 			});
@@ -2257,13 +2282,15 @@ describe('wen', function () {
 
 			setTimeout(function () {
 				willBeTrue = true;
-			}, 500);
+			}, 1500);
 		});
 
-		it('should return truthy within a few hundred milliseconds', function (done) {
+		it('should return truthy within a few milliseconds', function (done) {
 			var willBeTrue;
 
 			truthy.on('is-now-true', function () {
+				end = new Date();
+				(end - start).should.not.be.below(10).and.not.above(1000);
 				willBeTrue.should.be.ok;
 				done();
 			});
@@ -2274,13 +2301,15 @@ describe('wen', function () {
 
 			setTimeout(function () {
 				willBeTrue = 'HELLO I AM TRUTHY LOLOLOL';
-			}, 500);
+			}, 10);
 		});
 
 		it('should return true within a few milliseconds if the delay is smaller', function (done) {
 			var willBe10 = 0;
 
 			truthy.on('is-now-higher', function () {
+				end = new Date();
+				(end - start).should.not.be.below(100).and.not.above(130);
 				willBe10.should.not.be.below(10);
 				done();
 			});
@@ -2288,6 +2317,24 @@ describe('wen', function () {
 			truthy.add(function () {
 				return (willBe10++) > 10;
 			}, 'is-now-higher', 10);
+		});
+
+		it('should execute immediately if already true', function (done) {
+			truthy.on('is-now-higher', function () {
+				end = new Date();
+				(end - start).should.not.be.above(5);
+				done();
+			});
+
+			truthy.add(function () {
+				return true;
+			}, 'is-now-higher', 10);
+		});
+
+		it('should throw an error if you do not supply an event', function () {
+			should(function () {
+				truthy.add(function () {});
+			}).throw();
 		});
 	});
 });

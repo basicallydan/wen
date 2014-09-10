@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>wen</title>
+	<script type="text/javascript" src="dist/wen.1.0.1.min.js"></script>
+	<script type="text/javascript">
+		var truth = wen();
+		var truthy = false;
+
+		truth.on('the-thing-is-done', function () {
+			alert('Bloop!');
+		});
+
+		truth.add(function () {
+			return truthy;
+		}, 'the-thing-is-done');
+
+		setTimeout(function () {
+			truthy = true;
+		}, 5000);
+	</script>
+</head>
+<body>
+
+</body>
+</html>

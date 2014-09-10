@@ -34,7 +34,7 @@ npm install wen --save
 Copy this into your HTML somewhere.
 
 ```
-<script src="https://raw.githubusercontent.com/basicallydan/wen/master/dist/wen.1.0.0.min.js"></script>
+<script src="https://raw.githubusercontent.com/basicallydan/wen/master/dist/wen.1.0.1.min.js"></script>
 <!-- If I want to do this properly I will download it and place it in my source code somewhere -->
 ```
 
@@ -54,6 +54,11 @@ There are only two direct dependencies. For the compiled `.min.js` version they 
   * ✓ Also has no dependencies.
 
 This makes for a total of two dependencies. You could probably read the entire source in about half an hour. I dare you.
+
+## Changes
+
+* 1.0.1: I forgot to make it browser friendly and didn't account for a dev error which I should've done. Now I have.
+* 1.0.0: First.
 
 ## "FAQ"
 
