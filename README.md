@@ -34,8 +34,7 @@ npm install wen --save
 Copy this into your HTML somewhere.
 
 ```
-<!-- This is the currently-in-the-repo minified version of wen and I am using it at my own risk -->
-<script src="https://github.com/basicallydan/wen/tree/master/wen.edge.min.js"></script>
+<script src="https://github.com/basicallydan/wen/tree/master/dist/wen.1.0.0.min.js"></script>
 <!-- If I want to do this properly I will download it and place it in my source code somewhere -->
 ```
 
