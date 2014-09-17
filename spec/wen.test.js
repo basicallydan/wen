@@ -42,7 +42,7 @@ describe('wen', function () {
 
 			truthy.add(function () {
 				return willBeTrue;
-			}, 'is-now-true');
+			}, 'is-now-true', 10);
 
 			setTimeout(function () {
 				willBeTrue = 'HELLO I AM TRUTHY LOLOLOL';
@@ -74,6 +74,36 @@ describe('wen', function () {
 			truthy.add(function () {
 				return true;
 			}, 'is-now-higher', 10);
+		});
+
+		it('should continue to execute twice if expiry limit is set to 2', function (done) {
+			var numExec = 0;
+			truthy.on('all-good', function () {
+				numExec += 1;
+				if (numExec === 2) {
+					numExec.should.eql(2);
+					done();
+				}
+			});
+
+			truthy.add(function () {
+				return true;
+			}, 'all-good', 10, 2);
+		});
+
+		it('should continue to execute many times if expiry limit is set to 0', function (done) {
+			var numExec = 0;
+			truthy.on('all-good', function () {
+				numExec += 1;
+				if (numExec === 10) {
+					numExec.should.eql(10);
+					done();
+				}
+			});
+
+			truthy.add(function () {
+				return true;
+			}, 'all-good', 10, 0);
 		});
 
 		it('should throw an error if you do not supply an event', function () {
